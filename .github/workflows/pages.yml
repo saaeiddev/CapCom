@@ -44,6 +44,25 @@ jobs:
           download "https://store.captown.capcom.com/cdn/shop/files/BIOHAZARD_RE2_Standard_Edition_SS_4_8daa174a-cb80-4f8a-90ed-7f4316433d90.jpg?v=1771217935&width=1445" "assets/re/characters/claire.jpg"
           download "https://store.captown.capcom.com/cdn/shop/files/Resident_Evil_8_SS3_ea812910-0ad1-4d9f-8211-d808256154cf.jpg?v=1771052889&width=1445" "assets/re/characters/chris.jpg"
           file assets/re/characters/*
+      - name: Cache official Devil May Cry character art
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/dmc/characters
+          download() {
+            local url="$1"
+            local out="$2"
+            curl --fail --location --retry 4 --retry-delay 2 \
+              --user-agent "Mozilla/5.0 (GitHub Pages asset fetch)" \
+              --referer "https://store.captown.capcom.com/" \
+              "$url" -o "$out"
+            test -s "$out"
+          }
+          download "https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_Key_art_JP_790bf0ff-7b63-4a86-8723-2a308eca3f3e.jpg?v=1770273065&width=1445" "assets/dmc/characters/dante.jpg"
+          download "https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_Key_art_JP_790bf0ff-7b63-4a86-8723-2a308eca3f3e.jpg?v=1770273065&width=1445" "assets/dmc/characters/nero.jpg"
+          download "https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_Key_art_JP_790bf0ff-7b63-4a86-8723-2a308eca3f3e.jpg?v=1770273065&width=1445" "assets/dmc/characters/vergil.jpg"
+          download "https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_SS_5_28e850bb-89cd-4c6f-8388-24a6f3982d10.jpg?v=1770273065&width=1445" "assets/dmc/characters/v.jpg"
+          file assets/dmc/characters/*
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
