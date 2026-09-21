@@ -1,34 +1,18 @@
 name: Probe direct GLB source
 on:
+  workflow_dispatch:
   push:
     branches: [main]
 jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Probe public model data
+      - name: Probe metadata
         shell: bash
         run: |
           set -euo pipefail
           curl -L -A "Mozilla/5.0" "https://sketchfab.com/models/2389b2db6e874c4287f43c34caedd394/embed?autostart=1" -o /tmp/embed.html
-          python - <<'PY'
-import re,html
-s=html.unescape(open('/tmp/embed.html','r',errors='ignore').read())
-for key in ['glb_archive','archives','downloadType','file.binz']:
-    print('\n===',key,'===')
-    pos=0
-    for _ in range(5):
-        i=s.find(key,pos)
-        if i<0: break
-        print(s[max(0,i-1200):i+2500])
-        pos=i+len(key)
-PY
-          echo "ENDPOINT PROBES"
-          for url in             "https://sketchfab.com/i/models/2389b2db6e874c4287f43c34caedd394/download"             "https://sketchfab.com/i/models/2389b2db6e874c4287f43c34caedd394/download?format=glb"             "https://sketchfab.com/models/2389b2db6e874c4287f43c34caedd394/download"             "https://api.sketchfab.com/v3/models/2389b2db6e874c4287f43c34caedd394/download"
-          do
-            echo "== $url"
-            curl -sS -L -o /tmp/probe -D /tmp/headers -A "Mozilla/5.0" "$url" || true
-            head -20 /tmp/headers
-            echo "bytes $(wc -c </tmp/probe)"
-            head -c 300 /tmp/probe | tr '\n' ' '; echo
-          done
+          python3 -c "import html; p='/tmp/embed.html'; s=html.unescape(open(p,errors='ignore').read()); open('/tmp/decoded.html','w').write(s)"
+          grep -o -E '.{0,1000}glb_archive.{0,2500}' /tmp/decoded.html | head -10 || true
+          grep -o -E '.{0,1000}archives.{0,2500}' /tmp/decoded.html | head -10 || true
+          grep -o -E 'https://[^\"[:space:]<>]+(glb|gltf|zip)[^\"[:space:]<>]*' /tmp/decoded.html | head -50 || true
