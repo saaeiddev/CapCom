@@ -12,19 +12,17 @@ jobs:
           set -euo pipefail
           curl -L -A "Mozilla/5.0" "https://sketchfab.com/models/2389b2db6e874c4287f43c34caedd394/embed?autostart=1" -o /tmp/embed.html
           python - <<'PY'
-          import re,html,json
-          s=html.unescape(open('/tmp/embed.html','r',errors='ignore').read())
-          print("KEY/VALUE SNIPPETS")
-          for m in re.finditer(r'(?i)(glb|gltf|archive|download)[^,}\n]{0,500}',s):
-              frag=m.group(0)
-              if 'feature' not in frag.lower():
-                  print(frag[:700])
-          print("\nURL CANDIDATES")
-          for x in re.findall(r'https://[^"\'<> ]+',s):
-              low=x.lower()
-              if any(k in low for k in ['glb','gltf','archive','download','file.binz']):
-                  print(x)
-          PY
+import re,html
+s=html.unescape(open('/tmp/embed.html','r',errors='ignore').read())
+for key in ['glb_archive','archives','downloadType','file.binz']:
+    print('\n===',key,'===')
+    pos=0
+    for _ in range(5):
+        i=s.find(key,pos)
+        if i<0: break
+        print(s[max(0,i-1200):i+2500])
+        pos=i+len(key)
+PY
           echo "ENDPOINT PROBES"
           for url in             "https://sketchfab.com/i/models/2389b2db6e874c4287f43c34caedd394/download"             "https://sketchfab.com/i/models/2389b2db6e874c4287f43c34caedd394/download?format=glb"             "https://sketchfab.com/models/2389b2db6e874c4287f43c34caedd394/download"             "https://api.sketchfab.com/v3/models/2389b2db6e874c4287f43c34caedd394/download"
           do
