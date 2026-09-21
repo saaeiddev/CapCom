@@ -63,12 +63,14 @@ jobs:
           download "https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_Key_art_JP_790bf0ff-7b63-4a86-8723-2a308eca3f3e.jpg?v=1770273065&width=1445" "assets/dmc/characters/vergil.jpg"
           download "https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_SS_5_28e850bb-89cd-4c6f-8388-24a6f3982d10.jpg?v=1770273065&width=1445" "assets/dmc/characters/v.jpg"
           file assets/dmc/characters/*
-      - name: Rebuild direct chainsaw GLB
+      - name: Ensure direct chainsaw GLB
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p assets
-          cat .chainsaw-upload/chunk-*.b64 | base64 --decode > assets/chainsaw.glb
+          if compgen -G ".chainsaw-upload/chunk-*.b64" > /dev/null; then
+            cat .chainsaw-upload/chunk-*.b64 | base64 --decode > assets/chainsaw.glb
+          fi
           python3 - <<'PY'
           from pathlib import Path
           p = Path("assets/chainsaw.glb")

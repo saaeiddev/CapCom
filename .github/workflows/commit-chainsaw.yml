@@ -1,0 +1,47 @@
+name: Commit direct chainsaw GLB
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.chainsaw-upload/**'
+
+permissions:
+  contents: write
+
+jobs:
+  commit-model:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild and commit GLB
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! compgen -G ".chainsaw-upload/chunk-*.b64" > /dev/null; then
+            echo "No upload chunks remain; nothing to do."
+            exit 0
+          fi
+
+          mkdir -p assets
+          cat .chainsaw-upload/chunk-*.b64 | base64 --decode > assets/chainsaw.glb
+
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("assets/chainsaw.glb")
+          data = p.read_bytes()
+          assert data[:4] == b"glTF", "Invalid GLB header"
+          assert len(data) == 20778856, f"Unexpected GLB size: {len(data)}"
+          print(f"Verified direct GLB: {len(data)} bytes")
+          PY
+
+          rm -rf .chainsaw-upload
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/chainsaw.glb .chainsaw-upload
+          git commit -m "Add direct yellow chainsaw GLB"
+          git push
