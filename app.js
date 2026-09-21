@@ -304,6 +304,36 @@ function esc(value){
   });
 }
 
+
+function mediaSeed(text){
+  var h = 2166136261;
+  for(var i=0;i<text.length;i++){ h ^= text.charCodeAt(i); h = Math.imul(h,16777619); }
+  return Math.abs(h >>> 0) % 100000;
+}
+
+function mediaArt(subject, gameTitle, kind){
+  var isPortrait = kind === 'character';
+  var isLocation = kind === 'location';
+  var prompt = [
+    subject,
+    'from', gameTitle,
+    isPortrait ? 'character portrait, full recognizable game character, detailed costume' :
+    isLocation ? 'environment location, cinematic wide establishing shot, detailed architecture and atmosphere' :
+    'signature weapon or equipment, product-style game prop showcase, highly detailed',
+    'premium video game encyclopedia artwork',
+    'cinematic lighting',
+    'clean composition',
+    'no text, no logo, no watermark'
+  ].join(' ');
+  var w = isPortrait ? 720 : (isLocation ? 1200 : 900);
+  var h = isPortrait ? 960 : (isLocation ? 700 : 650);
+  return 'https://image.pollinations.ai/prompt/'+encodeURIComponent(prompt)+'?width='+w+'&height='+h+'&nologo=true&seed='+mediaSeed(subject+gameTitle+kind);
+}
+
+function mediaImg(url,fallback,alt){
+  return '<img loading="lazy" decoding="async" src="'+url+'" alt="'+esc(alt)+'" onerror="this.onerror=null;this.src=\''+fallback+'\'">';
+}
+
 function gameSearchText(game){
   return [
     game.title,game.genre,game.summary,
@@ -354,17 +384,17 @@ function renderCharacters(){
   var roster = [];
   games.forEach(function(game){
     game.characters.forEach(function(char,index){
-      if(index < 2){ roster.push({game:game,char:char,index:index}); }
+      roster.push({game:game,char:char,index:index});
     });
   });
   $('#characterRail').innerHTML = roster.map(function(item){
-    var pos = item.index % 2 ? '70% center' : '30% center';
-    return '<article class="character-card" data-id="'+item.game.id+'" style="--game-accent:'+item.game.accent+'">'+
-      '<div class="character-card__art" style="background-image:url(&quot;'+item.game.image+'&quot;);background-position:'+pos+'"></div>'+
+    var art = item.char.image || mediaArt(item.char.name,item.game.title,'character');
+    return '<article class="character-card" data-id="'+item.game.id+'" style="--game-accent:#ffcc00">'+
+      '<img class="character-card__art" loading="lazy" decoding="async" src="'+art+'" alt="'+esc(item.char.name)+'" onerror="this.onerror=null;this.src=\''+item.game.image+'\'">'+
       '<div class="character-card__copy"><small>'+item.game.code+' // '+item.char.role+'</small><h3>'+item.char.name+'</h3><p>'+item.game.title+'</p></div>'+
       '</article>';
   }).join('');
-  $$('.character-card').forEach(function(card){
+  $('.character-card').forEach(function(card){
     card.addEventListener('click',function(){openGame(card.dataset.id,'characters');});
   });
 }
@@ -387,6 +417,7 @@ function renderWorldNodes(){
 function renderModalContent(){
   var g = currentGame;
   var html = '';
+
   if(currentTab === 'overview'){
     html = '<div class="overview-grid">'+
       '<div class="prose"><h3>ARCHIVE SUMMARY</h3><p>'+g.summary+'</p></div>'+
@@ -397,23 +428,41 @@ function renderModalContent(){
       '<div class="fact"><span>FOCUS</span><b>'+g.focus+'</b></div>'+
       '</div></div>';
   }
+
   if(currentTab === 'characters'){
-    html = '<div class="entry-grid">'+g.characters.map(function(c){
-      return '<article class="entry-card"><div class="entry-card__top"><i class="entry-dot"></i><h4>'+c.name+'</h4></div><small>'+c.role+'</small><p>'+c.bio+'</p></article>';
+    html = '<div class="media-grid">'+g.characters.map(function(c){
+      var image = c.image || mediaArt(c.name,g.title,'character');
+      return '<article class="media-card">'+
+        '<div class="media-card__image"><span class="image-badge">CHARACTER</span>'+
+        mediaImg(image,g.image,c.name)+
+        '</div><div class="media-card__body"><h4>'+c.name+'</h4><small>'+c.role+'</small><p>'+c.bio+'</p></div>'+
+        '</article>';
     }).join('')+'</div>';
   }
+
   if(currentTab === 'arsenal'){
-    html = '<div class="entry-grid">'+g.arsenal.map(function(a){
-      return '<article class="entry-card"><div class="entry-card__top"><i class="entry-dot"></i><h4>'+a.name+'</h4></div><small>'+a.type+'</small><p>'+a.note+'</p></article>';
+    html = '<div class="media-grid">'+g.arsenal.map(function(a){
+      var image = a.image || mediaArt(a.name,g.title,'weapon');
+      return '<article class="media-card">'+
+        '<div class="media-card__image"><span class="image-badge">ARSENAL</span>'+
+        mediaImg(image,g.image,a.name)+
+        '</div><div class="media-card__body"><h4>'+a.name+'</h4><small>'+a.type+'</small><p>'+a.note+'</p></div>'+
+        '</article>';
     }).join('')+'</div>';
   }
+
   if(currentTab === 'locations'){
     html = '<div class="location-list">'+g.locations.map(function(l){
-      return '<div class="location-item"><b>'+l.name+'</b><span>'+l.note+'</span></div>';
+      var image = l.image || mediaArt(l.name,g.title,'location');
+      return '<article class="location-media">'+
+        '<div class="location-media__image">'+mediaImg(image,g.image,l.name)+'</div>'+
+        '<div class="location-media__body"><b>'+l.name+'</b><p>'+l.note+'</p></div>'+
+        '</article>';
     }).join('')+'</div>';
   }
+
   $('#modalContent').innerHTML = html;
-  $('#modalContent').style.setProperty('--accent',g.accent);
+  $('#modalContent').style.setProperty('--accent','#ffcc00');
 }
 
 function openGame(id,tab){
@@ -445,7 +494,8 @@ function closeModal(){
 function updateCore(game){
   $('#coreTitle').textContent = game.title.toUpperCase();
   $('#coreMeta').textContent = game.genre.toUpperCase()+' // '+game.year;
-  document.documentElement.style.setProperty('--accent',game.accent);
+  document.documentElement.style.setProperty('--accent','#ffcc00');
+  document.documentElement.style.setProperty('--accent-2','#0055a5');
 }
 
 function showToast(message){
@@ -517,7 +567,7 @@ function setupThree(){
   renderer.setClearColor(0x000000,0);
 
   var scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x05070b,.045);
+  scene.fog = new THREE.FogExp2(0x031b43,.045);
   var camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,.1,100);
   camera.position.set(0,0,13);
 
@@ -527,13 +577,13 @@ function setupThree(){
   scene.add(group);
 
   var coreGeo = new THREE.IcosahedronGeometry(1.55,2);
-  var coreMat = new THREE.MeshBasicMaterial({color:0x4fbff5,wireframe:true,transparent:true,opacity:.16});
+  var coreMat = new THREE.MeshBasicMaterial({color:0xffcc00,wireframe:true,transparent:true,opacity:.20});
   var core = new THREE.Mesh(coreGeo,coreMat);
   group.add(core);
 
   var inner = new THREE.Mesh(
     new THREE.IcosahedronGeometry(.9,1),
-    new THREE.MeshBasicMaterial({color:0x7f7bff,wireframe:true,transparent:true,opacity:.13})
+    new THREE.MeshBasicMaterial({color:0x0066cc,wireframe:true,transparent:true,opacity:.20})
   );
   group.add(inner);
 
@@ -541,7 +591,7 @@ function setupThree(){
   [2.2,2.8,3.4].forEach(function(radius,index){
     var ring = new THREE.Mesh(
       new THREE.TorusGeometry(radius,.012,8,120),
-      new THREE.MeshBasicMaterial({color:index===1?0x7d7bff:0x65d9ff,transparent:true,opacity:.16})
+      new THREE.MeshBasicMaterial({color:index===1?0xffcc00:0x2a8cff,transparent:true,opacity:.22})
     );
     ring.rotation.x = Math.PI/2.5 + index*.34;
     ring.rotation.y = index*.55;
@@ -557,7 +607,7 @@ function setupThree(){
   }
   var starGeo = new THREE.BufferGeometry();
   starGeo.setAttribute('position',new THREE.BufferAttribute(positions,3));
-  var stars = new THREE.Points(starGeo,new THREE.PointsMaterial({color:0x7b9bb8,size:.025,transparent:true,opacity:.48}));
+  var stars = new THREE.Points(starGeo,new THREE.PointsMaterial({color:0xbfdcff,size:.025,transparent:true,opacity:.42}));
   scene.add(stars);
 
   var nodeGroup = new THREE.Group();
@@ -566,7 +616,7 @@ function setupThree(){
     var angle = (index/games.slice(0,7).length)*Math.PI*2;
     var sphere = new THREE.Mesh(
       new THREE.SphereGeometry(.075,12,12),
-      new THREE.MeshBasicMaterial({color:new THREE.Color(game.accent),transparent:true,opacity:.9})
+      new THREE.MeshBasicMaterial({color:new THREE.Color(index%2===0?'#ffcc00':'#2a8cff'),transparent:true,opacity:.9})
     );
     sphere.position.set(Math.cos(angle)*3.05,Math.sin(angle*1.8)*1.35,Math.sin(angle)*1.6);
     nodeGroup.add(sphere);
