@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#05070b" />
+  <meta name="description" content="An interactive 3D fan-made encyclopedia exploring iconic Capcom games, characters, weapons and worlds." />
+  <title>CAPCOM // Universe Archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="boot" class="boot" aria-hidden="true">
+    <div class="boot__mark">C</div>
+    <div class="boot__title">CAPCOM // UNIVERSE ARCHIVE</div>
+    <div class="boot__track"><span></span></div>
+    <div class="boot__meta">INDEXING WORLDS · CHARACTERS · ARSENALS · LOCATIONS</div>
+  </div>
+
+  <canvas id="webgl" aria-hidden="true"></canvas>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="CAPCOM Universe Archive home">
+      <span class="brand__sigil">C</span>
+      <span>
+        <strong>CAPCOM</strong>
+        <small>UNIVERSE ARCHIVE</small>
+      </span>
+    </a>
+
+    <nav class="topnav" aria-label="Primary navigation">
+      <a href="#games">Games</a>
+      <a href="#characters">Characters</a>
+      <a href="#worlds">Worlds</a>
+      <a href="#about">About</a>
+    </nav>
+
+    <button id="soundToggle" class="icon-btn" type="button" aria-label="Toggle interface sound" title="Interface sound">
+      <span class="sound-bars"><i></i><i></i><i></i></span>
+    </button>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="hero__copy">
+        <div class="eyebrow"><span></span> FAN-MADE INTERACTIVE ENCYCLOPEDIA</div>
+        <h1>ENTER THE<br><em>CAPCOM</em> UNIVERSE</h1>
+        <p>Explore legendary games, iconic characters, signature weapons and unforgettable environments through a cinematic interactive archive.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#games">Explore archive <span>↗</span></a>
+          <button id="randomEntry" class="btn btn--ghost" type="button">Random entry <span>⌁</span></button>
+        </div>
+        <div class="hero__stats">
+          <div><b id="statGames">09</b><span>Game worlds</span></div>
+          <div><b id="statCharacters">36</b><span>Featured characters</span></div>
+          <div><b>3D</b><span>Interactive interface</span></div>
+        </div>
+      </div>
+
+      <div class="hero__core" aria-hidden="true">
+        <div class="core-label">
+          <span>ARCHIVE CORE</span>
+          <b id="coreTitle">RESIDENT EVIL</b>
+          <small id="coreMeta">SURVIVAL HORROR // 1996—</small>
+        </div>
+        <div class="scanline"></div>
+      </div>
+
+      <div class="scroll-hint" aria-hidden="true"><span></span> SCROLL TO ACCESS DATABASE</div>
+    </section>
+
+    <section id="games" class="section archive-section">
+      <div class="section-head">
+        <div>
+          <span class="section-index">01 / DATABASE</span>
+          <h2>GAME <em>WORLDS</em></h2>
+        </div>
+        <p>Select a universe to access characters, signature equipment, locations and field notes.</p>
+      </div>
+
+      <div class="toolbar">
+        <label class="search">
+          <span>⌕</span>
+          <input id="searchInput" type="search" placeholder="Search games, characters, weapons..." autocomplete="off" />
+          <kbd>⌘ K</kbd>
+        </label>
+        <div id="genreFilters" class="filters" aria-label="Genre filters"></div>
+      </div>
+
+      <div id="gameGrid" class="game-grid" aria-live="polite"></div>
+    </section>
+
+    <section id="characters" class="section character-section">
+      <div class="section-head">
+        <div>
+          <span class="section-index">02 / PERSONNEL</span>
+          <h2>ICONIC <em>CHARACTERS</em></h2>
+        </div>
+        <p>A quick-access roster spanning survival horror, stylish action, fighting, hunting, courtroom drama and more.</p>
+      </div>
+      <div id="characterRail" class="character-rail"></div>
+    </section>
+
+    <section id="worlds" class="section world-section">
+      <div class="world-panel">
+        <div class="world-panel__copy">
+          <span class="section-index">03 / WORLD MAP</span>
+          <h2>FROM RACCOON CITY<br>TO <em>THE FORBIDDEN LANDS</em></h2>
+          <p>The archive links each franchise to its signature places: ruined cities, demonic towers, arenas, wilderness regions, courtrooms and fantasy kingdoms.</p>
+          <button id="openWorldIndex" class="btn btn--primary" type="button">Open location index <span>＋</span></button>
+        </div>
+        <div id="worldNodes" class="world-nodes" aria-label="Featured locations"></div>
+      </div>
+    </section>
+
+    <section id="about" class="section about-section">
+      <div class="about-card">
+        <span class="section-index">04 / ABOUT THIS PROJECT</span>
+        <h2>A DIGITAL MUSEUM FOR <em>CAPCOM HISTORY</em></h2>
+        <p>This is an independent, non-commercial fan-made encyclopedia concept. CAPCOM, game titles, characters, logos and related artwork are trademarks and copyrights of their respective owners. This project is not affiliated with or endorsed by Capcom.</p>
+        <div class="about-card__footer">
+          <span>DESIGNED AS AN INTERACTIVE WEBGL ARCHIVE</span>
+          <span>v1.0 // 2026</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>CAPCOM // UNIVERSE ARCHIVE</span>
+    <span>Independent fan project · Educational / archival presentation</span>
+  </footer>
+
+  <div id="detailModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalTitle">
+    <div class="modal__backdrop" data-close-modal></div>
+    <article class="modal__panel">
+      <button class="modal__close" type="button" data-close-modal aria-label="Close">×</button>
+      <div id="modalHero" class="modal__hero">
+        <div class="modal__hero-overlay"></div>
+        <div class="modal__hero-copy">
+          <span id="modalKicker"></span>
+          <h2 id="modalTitle"></h2>
+          <p id="modalTagline"></p>
+        </div>
+      </div>
+      <div class="modal__tabs" role="tablist">
+        <button class="is-active" type="button" data-tab="overview">Overview</button>
+        <button type="button" data-tab="characters">Characters</button>
+        <button type="button" data-tab="arsenal">Arsenal</button>
+        <button type="button" data-tab="locations">Locations</button>
+      </div>
+      <div id="modalContent" class="modal__content"></div>
+    </article>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
