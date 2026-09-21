@@ -367,3 +367,5 @@ footer{padding:28px clamp(24px,7vw,110px) 36px;display:flex;justify-content:spac
   .media-grid{grid-template-columns:1fr}
   .location-media{grid-template-columns:1fr}.location-media__image{height:190px}
 }
+
+.character-card__art{width:100%;height:100%;object-fit:cover;display:block}
