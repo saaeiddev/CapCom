@@ -731,98 +731,6 @@ function setupEvents(){
 }
 
 
-function setupChainsawModel(){
-  var frame = $('#chainsawFrame');
-  var stage = document.querySelector('.hero__chainsaw');
-  if(!frame || !stage || !window.Sketchfab){return;}
-
-  var client = new window.Sketchfab('1.12.1',frame);
-  var reveal = function(){stage.classList.add('is-ready');};
-
-  client.init('2389b2db6e874c4287f43c34caedd394',{
-    autostart:1,
-    preload:1,
-    transparent:1,
-    autospin:.35,
-    ui_infos:0,
-    ui_controls:0,
-    ui_stop:0,
-    ui_help:0,
-    ui_settings:0,
-    ui_vr:0,
-    ui_ar:0,
-    ui_annotations:0,
-    scrollwheel:0,
-    success:function(api){
-      api.start(function(){
-        api.addEventListener('viewerready',function(){
-          api.setTextureQuality('hd',function(){});
-          api.getMaterialList(function(materialErr,materials){
-            if(materialErr || !materials || !materials.length){reveal();return;}
-
-            var source=materials[0];
-            var channels=JSON.parse(JSON.stringify(source.channels || {}));
-            var yellow=[1.0,.78,.02];
-
-            /* Keep normal/roughness/metalness/AO maps, replace only the red base-color map. */
-            if(channels.AlbedoPBR){
-              channels.AlbedoPBR.enable=true;
-              channels.AlbedoPBR.color=yellow.slice();
-              if(channels.AlbedoPBR.texture){delete channels.AlbedoPBR.texture;}
-            }
-            if(channels.DiffuseColor){
-              channels.DiffuseColor.enable=true;
-              channels.DiffuseColor.color=yellow.slice();
-              if(channels.DiffuseColor.texture){delete channels.DiffuseColor.texture;}
-            }
-            if(channels.DiffusePBR){
-              channels.DiffusePBR.enable=true;
-              channels.DiffusePBR.color=yellow.slice();
-              if(channels.DiffusePBR.texture){delete channels.DiffusePBR.texture;}
-            }
-
-            api.createMaterial({
-              name:'Chainsaw Body Yellow',
-              channels:channels
-            },function(createErr,yellowMaterial){
-              if(createErr || !yellowMaterial){reveal();return;}
-
-              api.getNodeMap(function(nodeErr,nodes){
-                if(nodeErr || !nodes){reveal();return;}
-
-                var list=Array.isArray(nodes)?nodes:Object.keys(nodes).map(function(key){return nodes[key];});
-                var bodyNames={
-                  'Object_18':1,
-                  'Object_19':1,
-                  'Object_20':1,
-                  'Object_21':1
-                };
-                var targets=list.filter(function(node){
-                  return node && bodyNames[node.name];
-                });
-
-                if(!targets.length){reveal();return;}
-
-                var remaining=targets.length;
-                targets.forEach(function(node){
-                  api.assignMaterial(node,yellowMaterial.id,function(){
-                    remaining-=1;
-                    if(remaining<=0){reveal();}
-                  });
-                });
-                setTimeout(reveal,1600);
-              });
-            });
-          });
-        });
-      });
-    },
-    error:function(){reveal();}
-  });
-
-  setTimeout(reveal,8000);
-}
-
 function setupThree(){
   if(!window.THREE || window.matchMedia('(prefers-reduced-motion: reduce)').matches){return;}
   var canvas = $('#webgl');
@@ -870,7 +778,6 @@ function boot(){
   renderCharacters();
   renderWorldNodes();
   setupEvents();
-  setupChainsawModel();
   setupThree();
   updateCore(games[0]);
   $('#statGames').textContent=String(games.length).padStart(2,'0');
