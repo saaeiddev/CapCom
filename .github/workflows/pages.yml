@@ -25,6 +25,25 @@ jobs:
         uses: actions/checkout@v4
       - name: Configure Pages
         uses: actions/configure-pages@v5
+      - name: Cache official Resident Evil character art
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/re/characters
+          download() {
+            local url="$1"
+            local out="$2"
+            curl --fail --location --retry 4 --retry-delay 2 \
+              --user-agent "Mozilla/5.0 (GitHub Pages asset fetch)" \
+              --referer "https://store.captown.capcom.com/" \
+              "$url" -o "$out"
+            test -s "$out"
+          }
+          download "https://store.captown.capcom.com/cdn/shop/files/BIOHAZARD_RE2_Standard_Edition_SS_7_dcb6af97-a4f6-4d11-b595-4dc89b058e2e.jpg?v=1771217935&width=1445" "assets/re/characters/leon.jpg"
+          download "https://store.captown.capcom.com/cdn/shop/files/BIOHAZARD_RE3_SS_5_6cef4fd7-3e2f-403a-94dc-b782c4528b91.jpg?v=1772187660&width=1445" "assets/re/characters/jill.jpg"
+          download "https://store.captown.capcom.com/cdn/shop/files/BIOHAZARD_RE2_Standard_Edition_SS_4_8daa174a-cb80-4f8a-90ed-7f4316433d90.jpg?v=1771217935&width=1445" "assets/re/characters/claire.jpg"
+          download "https://store.captown.capcom.com/cdn/shop/files/Resident_Evil_8_SS3_ea812910-0ad1-4d9f-8211-d808256154cf.jpg?v=1771052889&width=1445" "assets/re/characters/chris.jpg"
+          file assets/re/characters/*
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
