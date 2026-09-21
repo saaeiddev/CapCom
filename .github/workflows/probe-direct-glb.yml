@@ -1,0 +1,27 @@
+name: Probe direct GLB source
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe model page
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L -A "Mozilla/5.0" "https://sketchfab.com/models/2389b2db6e874c4287f43c34caedd394/embed?autostart=1" -o /tmp/embed.html
+          python - <<'PY'
+          import re,html
+          s=html.unescape(open('/tmp/embed.html','r',errors='ignore').read())
+          for key in ['archive','download','glb','gltf','file.binz','model_file','modelFile','source']:
+              print('\n###',key)
+              i=s.lower().find(key.lower())
+              print('pos',i)
+              if i>=0: print(s[max(0,i-1200):i+2400])
+          print('\nGLB-ish URLs:')
+          for x in re.findall(r'https://[^"\'<> ]+',s):
+              if any(k in x.lower() for k in ['glb','gltf','archive','file.binz']):
+                  print(x)
+          PY
