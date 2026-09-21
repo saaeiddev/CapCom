@@ -329,10 +329,10 @@ const officialMedia = {
   },
   'devil-may-cry': {
     characters: {
-      'Dante': {url:'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_Key_art_JP_790bf0ff-7b63-4a86-8723-2a308eca3f3e.jpg?v=1770273065&width=1445', position:'18% center'},
-      'Nero': {url:'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_Key_art_JP_790bf0ff-7b63-4a86-8723-2a308eca3f3e.jpg?v=1770273065&width=1445', position:'46% center'},
-      'Vergil': {url:'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_Key_art_JP_790bf0ff-7b63-4a86-8723-2a308eca3f3e.jpg?v=1770273065&width=1445', position:'88% center'},
-      'V': {url:'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_SS_5_28e850bb-89cd-4c6f-8388-24a6f3982d10.jpg?v=1770273065&width=1445', position:'center'}
+      'Dante': {url:'./assets/dmc/characters/dante.jpg', position:'18% center'},
+      'Nero': {url:'./assets/dmc/characters/nero.jpg', position:'46% center'},
+      'Vergil': {url:'./assets/dmc/characters/vergil.jpg', position:'88% center'},
+      'V': {url:'./assets/dmc/characters/v.jpg', position:'center'}
     },
     arsenal: {
       'Devil Sword Dante':'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_SS_1_2f2964ce-da52-45fb-8baf-117f7c9d2e82.jpg?v=1770273065&width=1445',
