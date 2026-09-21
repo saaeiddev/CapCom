@@ -394,7 +394,7 @@ function renderCharacters(){
       '<div class="character-card__copy"><small>'+item.game.code+' // '+item.char.role+'</small><h3>'+item.char.name+'</h3><p>'+item.game.title+'</p></div>'+
       '</article>';
   }).join('');
-  $('.character-card').forEach(function(card){
+  $$('.character-card').forEach(function(card){
     card.addEventListener('click',function(){openGame(card.dataset.id,'characters');});
   });
 }
