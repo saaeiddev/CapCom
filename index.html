@@ -58,20 +58,7 @@
         </div>
       </div>
 
-      <div class="hero__chainsaw" aria-label="Interactive Evil Dead chainsaw 3D model">
-        <div class="chainsaw-stage__label">
-          <span>3D ARCHIVE OBJECT</span>
-          <b>EVIL DEAD CHAINSAW</b>
-        </div>
-        <iframe
-          id="chainsawFrame"
-          title="Interactive Evil Dead chainsaw 3D model"
-          src=""
-          allow="autoplay; fullscreen; xr-spatial-tracking"
-          allowfullscreen
-        ></iframe>
-        <a class="chainsaw-credit" href="https://sketchfab.com/3d-models/evil-dead-chainsaw-2389b2db6e874c4287f43c34caedd394" target="_blank" rel="noopener noreferrer">Model: Nerd_Sp · Sketchfab · CC BY</a>
-      </div>
+      <div id="chainsawMount" class="hero__chainsaw-local" aria-label="Interactive chainsaw 3D model"></div>
 
       <div class="scroll-hint" aria-hidden="true"><span></span> SCROLL TO ACCESS DATABASE</div>
     </section>
@@ -163,7 +150,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-  <script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
   <script src="./app.js"></script>
 </body>
 </html>
