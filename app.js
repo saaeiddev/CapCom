@@ -309,10 +309,10 @@ function esc(value){
 const officialMedia = {
   'resident-evil': {
     characters: {
-      'Leon S. Kennedy': {url:'https://store.captown.capcom.com/cdn/shop/files/BIOHAZARD_RE2_Standard_Edition_SS_7_dcb6af97-a4f6-4d11-b595-4dc89b058e2e.jpg?v=1771217935&width=1445', position:'center'},
-      'Jill Valentine': {url:'https://store.captown.capcom.com/cdn/shop/files/BIOHAZARD_RE3_SS_5_6cef4fd7-3e2f-403a-94dc-b782c4528b91.jpg?v=1772187660&width=1445', position:'center'},
-      'Claire Redfield': {url:'https://store.captown.capcom.com/cdn/shop/files/BIOHAZARD_RE2_Standard_Edition_SS_4_8daa174a-cb80-4f8a-90ed-7f4316433d90.jpg?v=1771217935&width=1445', position:'center'},
-      'Chris Redfield': {url:'https://store.captown.capcom.com/cdn/shop/files/Resident_Evil_8_SS3_ea812910-0ad1-4d9f-8211-d808256154cf.jpg?v=1771052889&width=1445', position:'center'}
+      'Leon S. Kennedy': {url:'./assets/re/characters/leon.jpg', position:'center'},
+      'Jill Valentine': {url:'./assets/re/characters/jill.jpg', position:'center'},
+      'Claire Redfield': {url:'./assets/re/characters/claire.jpg', position:'center'},
+      'Chris Redfield': {url:'./assets/re/characters/chris.jpg', position:'center'}
     },
     arsenal: {
       'SG-09 R':'https://store.captown.capcom.com/cdn/shop/files/resident_evil_4_SS_10_f6a1cc38-1f54-4588-a111-1fc277227781.jpg?v=1770272513&width=1445',
