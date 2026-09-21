@@ -390,9 +390,9 @@ const officialMedia = {
   'mega-man': {
     characters: {
       'Mega Man': {url:'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_Key_art_JP_8c17c2f9-b5cc-4690-8a45-1a2d5df105c4.jpg?v=1770272613&width=1445', position:'72% center'},
-      'Dr. Wily': {url:'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_SS_2_2ad32786-a084-4caa-a355-11809be5c29d.jpg?v=1772185844&width=1445', position:'center'},
-      'Roll': {url:'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_Key_art_JP_8c17c2f9-b5cc-4690-8a45-1a2d5df105c4.jpg?v=1770272613&width=1445', position:'92% center'},
-      'Rush': {url:'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_SS_1_c8db2a0e-786c-4764-ab79-45ce1044ede5.jpg?v=1772185844&width=1445', position:'center'}
+      'Dr. Wily': {url:'https://cucdn.creativeuncut.com/gallery-35/art/mm11-wily-concept.jpg', position:'center'},
+      'Roll': {url:'https://cucdn.creativeuncut.com/gallery-35/art/mm11-roll-concept.jpg', position:'center'},
+      'Rush': {url:'https://vignette.wikia.nocookie.net/nintendo/images/3/37/MM11Rush.png/revision/latest?cb=20181108020244&path-prefix=en', position:'center'}
     },
     arsenal: {
       'Mega Buster':'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_SS_2_2ad32786-a084-4caa-a355-11809be5c29d.jpg?v=1772185844&width=1445',
@@ -412,7 +412,7 @@ const officialMedia = {
       'Phoenix Wright': {url:'https://store.captown.capcom.com/cdn/shop/files/123__Key_art_JP_3de7eb96-6132-479c-9a2c-6783ef2dce71.jpg?v=1770272624&width=1445', position:'20% center'},
       'Miles Edgeworth': {url:'https://store.captown.capcom.com/cdn/shop/files/123__Key_art_JP_3de7eb96-6132-479c-9a2c-6783ef2dce71.jpg?v=1770272624&width=1445', position:'43% center'},
       'Maya Fey': {url:'https://store.captown.capcom.com/cdn/shop/files/123__Key_art_JP_3de7eb96-6132-479c-9a2c-6783ef2dce71.jpg?v=1770272624&width=1445', position:'55% 70%'},
-      'Mia Fey': {url:'https://store.captown.capcom.com/cdn/shop/files/123__Key_art_JP_3de7eb96-6132-479c-9a2c-6783ef2dce71.jpg?v=1770272624&width=1445', position:'8% 22%'}
+      'Mia Fey': {url:'https://www.creativeuncut.com/gallery-05/art/praa-mia-fey2.jpg', position:'center'}
     },
     arsenal: {
       'Attorney Badge':'https://store.captown.capcom.com/cdn/shop/files/123__SS_3_8d288a5a-828c-4102-9836-6d3697e55354.jpg?v=1772186379&width=1445',
@@ -429,10 +429,10 @@ const officialMedia = {
   },
   'dead-rising': {
     characters: {
-      'Frank West': {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg', position:'35% center'},
-      'Isabela Keyes': {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg', position:'65% center'},
-      'Brad Garrison': {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg', position:'20% center'},
-      'Carlito Keyes': {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg', position:'80% center'}
+      'Frank West': {url:'https://imgix.bustle.com/uploads/image/2024/9/17/ad153325/dead-rising-social.jpg?crop=faces&fit=crop&fm=jpg&h=900&w=1200', position:'center'},
+      'Isabela Keyes': {url:'https://images4.alphacoders.com/159/159168.jpg', position:'center'},
+      'Brad Garrison': {url:'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/427190/e2669112fa341fb151ec5ec4cde7a12a949563e7.jpg', position:'center'},
+      'Carlito Keyes': {url:'https://origin.giantbomb.com/a/uploads/scale_medium/0/5353/279338-carlito.jpg', position:'center'}
     },
     arsenal: {
       'Baseball Bat':'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg',
