@@ -305,33 +305,201 @@ function esc(value){
 }
 
 
-function mediaSeed(text){
-  var h = 2166136261;
-  for(var i=0;i<text.length;i++){ h ^= text.charCodeAt(i); h = Math.imul(h,16777619); }
-  return Math.abs(h >>> 0) % 100000;
+
+const officialMedia = {
+  'resident-evil': {
+    characters: {
+      'Leon S. Kennedy': {url:'https://store.captown.capcom.com/cdn/shop/files/BIOHAZARD_RE2_Standard_Edition_SS_7_dcb6af97-a4f6-4d11-b595-4dc89b058e2e.jpg?v=1771217935&width=1445', position:'center'},
+      'Jill Valentine': {url:'https://store.captown.capcom.com/cdn/shop/files/BIOHAZARD_RE3_SS_5_6cef4fd7-3e2f-403a-94dc-b782c4528b91.jpg?v=1772187660&width=1445', position:'center'},
+      'Claire Redfield': {url:'https://store.captown.capcom.com/cdn/shop/files/BIOHAZARD_RE2_Standard_Edition_SS_4_8daa174a-cb80-4f8a-90ed-7f4316433d90.jpg?v=1771217935&width=1445', position:'center'},
+      'Chris Redfield': {url:'https://store.captown.capcom.com/cdn/shop/files/Resident_Evil_8_SS3_ea812910-0ad1-4d9f-8211-d808256154cf.jpg?v=1771052889&width=1445', position:'center'}
+    },
+    arsenal: {
+      'SG-09 R':'https://store.captown.capcom.com/cdn/shop/files/resident_evil_4_SS_10_f6a1cc38-1f54-4588-a111-1fc277227781.jpg?v=1770272513&width=1445',
+      'Combat Knife':'https://store.captown.capcom.com/cdn/shop/files/resident_evil_4_SS_8_3684dd26-9d5b-4f7c-b11a-2ab095103f05.jpg?v=1770272515&width=1445',
+      'W-870':'https://store.captown.capcom.com/cdn/shop/files/resident_evil_4_SS_9_8855562e-eb93-4a2f-a257-4c62d578d880.jpg?v=1770272518&width=1445',
+      'Rocket Launcher':'https://store.captown.capcom.com/cdn/shop/files/resident_evil_4_SS_14_aa74a121-0003-4664-95e4-f9782c69d61f.jpg?v=1770272519&width=1445'
+    },
+    locations: {
+      'Raccoon City':'https://store.captown.capcom.com/cdn/shop/files/BIOHAZARD_RE2_Standard_Edition_SS_3_e3975239-1185-4c2c-b2fe-6c26a9618471.jpg?v=1771217935&width=1445',
+      'Spencer Mansion':'https://store.captown.capcom.com/cdn/shop/files/ResidentEvil_SS_01.jpg?v=1779234955&width=1445',
+      'R.P.D.':'https://store.captown.capcom.com/cdn/shop/files/BIOHAZARD_RE2_Standard_Edition_SS_5_f586ca2e-a75b-4720-8a62-eccd75522b8a.jpg?v=1771217935&width=1445',
+      'Valdelobos':'https://store.captown.capcom.com/cdn/shop/files/resident_evil_4_SS_4_3bbb1909-1845-4ac2-a6d7-317d0c1caf4b.jpg?v=1770272516&width=1445'
+    }
+  },
+  'devil-may-cry': {
+    characters: {
+      'Dante': {url:'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_Key_art_JP_790bf0ff-7b63-4a86-8723-2a308eca3f3e.jpg?v=1770273065&width=1445', position:'18% center'},
+      'Nero': {url:'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_Key_art_JP_790bf0ff-7b63-4a86-8723-2a308eca3f3e.jpg?v=1770273065&width=1445', position:'46% center'},
+      'Vergil': {url:'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_Key_art_JP_790bf0ff-7b63-4a86-8723-2a308eca3f3e.jpg?v=1770273065&width=1445', position:'88% center'},
+      'V': {url:'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_SS_5_28e850bb-89cd-4c6f-8388-24a6f3982d10.jpg?v=1770273065&width=1445', position:'center'}
+    },
+    arsenal: {
+      'Devil Sword Dante':'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_SS_1_2f2964ce-da52-45fb-8baf-117f7c9d2e82.jpg?v=1770273065&width=1445',
+      'Ebony & Ivory':'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_SS_2_31252038-d9ad-42fb-862e-70d576b2f140.jpg?v=1770273067&width=1445',
+      'Red Queen':'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_SS_3_8e100049-5275-4bdb-9276-14bef970ea55.jpg?v=1770273065&width=1445',
+      'Yamato':'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_SS_4_078b6302-b2da-45e3-b26e-dead30b140aa.jpg?v=1770273065&width=1445'
+    },
+    locations: {
+      'Red Grave City':'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_SS_1_2f2964ce-da52-45fb-8baf-117f7c9d2e82.jpg?v=1770273065&width=1445',
+      'Qliphoth':'https://store.captown.capcom.com/cdn/shop/files/Devil_May_Cry_5_Vergil_SS_2_31252038-d9ad-42fb-862e-70d576b2f140.jpg?v=1770273067&width=1445',
+      'Temen-ni-gru':'https://cdn.cloudflare.steamstatic.com/steam/apps/631510/header.jpg',
+      'Fortuna':'https://cdn.cloudflare.steamstatic.com/steam/apps/329050/header.jpg'
+    }
+  },
+  'street-fighter': {
+    characters: {
+      'Ryu': {url:'https://www.streetfighter.com/6/assets/images/character/ryu/ryu.png', position:'center top'},
+      'Chun-Li': {url:'https://www.streetfighter.com/6/assets/images/character/chunli/chunli.png', position:'center top'},
+      'Luke Sullivan': {url:'https://www.streetfighter.com/6/assets/images/character/luke/luke.png', position:'center top'},
+      'Cammy White': {url:'https://www.streetfighter.com/6/assets/images/character/cammy/cammy.png', position:'center top'}
+    },
+    arsenal: {
+      'Hadoken':'https://store.captown.capcom.com/cdn/shop/files/Street_Fighter_6_SS5_8be15641-f689-48e6-a3d8-a571e75e20ed.jpg?v=1770272660&width=1445',
+      'Shoryuken':'https://store.captown.capcom.com/cdn/shop/files/Street_Fighter_6_SS6_8941b3c5-19e4-448f-9cd2-23f8651fd489.jpg?v=1770272660&width=1445',
+      'Kikoken':'https://store.captown.capcom.com/cdn/shop/files/Street_Fighter_6_SS7_27f35f12-36b9-4267-9afa-27c66d69f33f.jpg?v=1770272660&width=1445',
+      'Spiral Arrow':'https://store.captown.capcom.com/cdn/shop/files/Street_Fighter_6_SS8_3c648c04-ce66-4d79-88ca-833e308bad79.jpg?v=1770272660&width=1445'
+    },
+    locations: {
+      'Metro City':'https://store.captown.capcom.com/cdn/shop/files/Street_Fighter_6_SS1_b79dd6b7-4a00-4c46-ab2a-e035ca84617e.jpg?v=1770272660&width=1445',
+      'Genbu Temple':'https://store.captown.capcom.com/cdn/shop/files/Street_Fighter_6_SS9_b0775ec4-c049-455d-b347-a9cc853cc916.jpg?v=1770272660&width=1445',
+      'Tian Hong Yuan':'https://store.captown.capcom.com/cdn/shop/files/Street_Fighter_6_SS3_236a65e2-b846-416c-9085-05becdea192c.jpg?v=1770272660&width=1445',
+      'Training Room':'https://store.captown.capcom.com/cdn/shop/files/Street_Fighter_6_SS10_0f1e33a9-cc59-4b59-9c4c-ad688c5ad080.jpg?v=1770272660&width=1445'
+    }
+  },
+  'monster-hunter': {
+    characters: {
+      'The Hunter': {url:'https://store.captown.capcom.com/cdn/shop/files/bbfae8b956595c8bb3cd83e025588d55_004f471a-a867-4bd2-8817-a13c0df9f46e.jpg?v=1770273275&width=1445', position:'72% center'},
+      'Alma': {url:'https://store.captown.capcom.com/cdn/shop/files/Monster_Hunter_Wilds_SS_10_32d238dc-3e48-4482-90f9-1f0d9a7039cc.png?v=1770273275&width=1445', position:'35% center'},
+      'Gemma': {url:'https://store.captown.capcom.com/cdn/shop/files/Monster_Hunter_Wilds_SS_8_2800eb67-b478-4e26-8ada-cd35697fa5a8.png?v=1770273275&width=1445', position:'35% center'},
+      'Nata': {url:'https://store.captown.capcom.com/cdn/shop/files/Monster_Hunter_Wilds_SS_7_82f009f9-264c-4542-87be-588d4f86e4e1.png?v=1770273275&width=1445', position:'70% center'}
+    },
+    arsenal: {
+      'Great Sword':'https://store.captown.capcom.com/cdn/shop/files/Monster_Hunter_Wilds_SS_7_82f009f9-264c-4542-87be-588d4f86e4e1.png?v=1770273275&width=1445',
+      'Long Sword':'https://store.captown.capcom.com/cdn/shop/files/Monster_Hunter_Wilds_SS_8_2800eb67-b478-4e26-8ada-cd35697fa5a8.png?v=1770273275&width=1445',
+      'Bow':'https://store.captown.capcom.com/cdn/shop/files/bbfae8b956595c8bb3cd83e025588d55_004f471a-a867-4bd2-8817-a13c0df9f46e.jpg?v=1770273275&width=1445',
+      'Heavy Bowgun':'https://store.captown.capcom.com/cdn/shop/files/Monster_Hunter_Wilds_SS_1_e67da5d0-11e6-41c3-9709-0c11f5c7a716.png?v=1770273277&width=1445'
+    },
+    locations: {
+      'Forbidden Lands':'https://store.captown.capcom.com/cdn/shop/files/Monster_Hunter_Wilds_SS_1_e67da5d0-11e6-41c3-9709-0c11f5c7a716.png?v=1770273277&width=1445',
+      'Windward Plains':'https://store.captown.capcom.com/cdn/shop/files/Monster_Hunter_Wilds_SS_3_910710db-da20-4971-ba9f-fc1e12fd3102.png?v=1770273275&width=1445',
+      'Scarlet Forest':'https://store.captown.capcom.com/cdn/shop/files/Monster_Hunter_Wilds_SS_5_888c4ccd-fdbf-4b2e-863e-202e63f9622f.png?v=1770273275&width=1445',
+      'Oilwell Basin':'https://store.captown.capcom.com/cdn/shop/files/Monster_Hunter_Wilds_SS_4_ae57a886-f0fa-46f3-b1b9-fb0ff1c3a444.png?v=1770273275&width=1445'
+    }
+  },
+  'mega-man': {
+    characters: {
+      'Mega Man': {url:'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_Key_art_JP_8c17c2f9-b5cc-4690-8a45-1a2d5df105c4.jpg?v=1770272613&width=1445', position:'72% center'},
+      'Dr. Wily': {url:'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_SS_2_2ad32786-a084-4caa-a355-11809be5c29d.jpg?v=1772185844&width=1445', position:'center'},
+      'Roll': {url:'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_Key_art_JP_8c17c2f9-b5cc-4690-8a45-1a2d5df105c4.jpg?v=1770272613&width=1445', position:'92% center'},
+      'Rush': {url:'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_SS_1_c8db2a0e-786c-4764-ab79-45ce1044ede5.jpg?v=1772185844&width=1445', position:'center'}
+    },
+    arsenal: {
+      'Mega Buster':'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_SS_2_2ad32786-a084-4caa-a355-11809be5c29d.jpg?v=1772185844&width=1445',
+      'Block Dropper':'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_SS_4_23fab588-9edc-4458-96dc-c687b1d12bdb.jpg?v=1772185844&width=1445',
+      'Speed Gear':'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_SS_3_e60be920-5cdc-4cf8-b933-da4c0d2bd334.jpg?v=1772185844&width=1445',
+      'Power Gear':'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_SS_5_52a8ed99-6004-4f65-9edd-e0db7fe6275c.jpg?v=1772185844&width=1445'
+    },
+    locations: {
+      "Dr. Light’s Lab":'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_Key_art_JP_8c17c2f9-b5cc-4690-8a45-1a2d5df105c4.jpg?v=1770272613&width=1445',
+      'Robot Master Stages':'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_SS_1_c8db2a0e-786c-4764-ab79-45ce1044ede5.jpg?v=1772185844&width=1445',
+      'Gear Fortress':'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_SS_2_2ad32786-a084-4caa-a355-11809be5c29d.jpg?v=1772185844&width=1445',
+      'Wily Castle':'https://store.captown.capcom.com/cdn/shop/files/Mega_Man_11_SS_4_23fab588-9edc-4458-96dc-c687b1d12bdb.jpg?v=1772185844&width=1445'
+    }
+  },
+  'ace-attorney': {
+    characters: {
+      'Phoenix Wright': {url:'https://store.captown.capcom.com/cdn/shop/files/123__Key_art_JP_3de7eb96-6132-479c-9a2c-6783ef2dce71.jpg?v=1770272624&width=1445', position:'20% center'},
+      'Miles Edgeworth': {url:'https://store.captown.capcom.com/cdn/shop/files/123__Key_art_JP_3de7eb96-6132-479c-9a2c-6783ef2dce71.jpg?v=1770272624&width=1445', position:'43% center'},
+      'Maya Fey': {url:'https://store.captown.capcom.com/cdn/shop/files/123__Key_art_JP_3de7eb96-6132-479c-9a2c-6783ef2dce71.jpg?v=1770272624&width=1445', position:'55% 70%'},
+      'Mia Fey': {url:'https://store.captown.capcom.com/cdn/shop/files/123__Key_art_JP_3de7eb96-6132-479c-9a2c-6783ef2dce71.jpg?v=1770272624&width=1445', position:'8% 22%'}
+    },
+    arsenal: {
+      'Attorney Badge':'https://store.captown.capcom.com/cdn/shop/files/123__SS_3_8d288a5a-828c-4102-9836-6d3697e55354.jpg?v=1772186379&width=1445',
+      'Court Record':'https://store.captown.capcom.com/cdn/shop/files/123__SS_9_a5d5f51a-641a-4f61-a451-d72be01378cc.jpg?v=1772186379&width=1445',
+      'Objection!':'https://store.captown.capcom.com/cdn/shop/files/123__SS_4_JP_05bc5672-2948-47fa-bc4f-72468d5252c6.jpg?v=1772186379&width=1445',
+      'Psyche-Locks':'https://store.captown.capcom.com/cdn/shop/files/123__SS_6_ae7da2f4-78bc-4935-a01b-eb425dc212d7.jpg?v=1772186379&width=1445'
+    },
+    locations: {
+      'District Court':'https://store.captown.capcom.com/cdn/shop/files/123__SS_4_JP_05bc5672-2948-47fa-bc4f-72468d5252c6.jpg?v=1772186379&width=1445',
+      'Wright & Co. Law Offices':'https://store.captown.capcom.com/cdn/shop/files/123__SS_3_8d288a5a-828c-4102-9836-6d3697e55354.jpg?v=1772186379&width=1445',
+      'Detention Center':'https://store.captown.capcom.com/cdn/shop/files/123__SS_9_a5d5f51a-641a-4f61-a451-d72be01378cc.jpg?v=1772186379&width=1445',
+      'Kurain Village':'https://store.captown.capcom.com/cdn/shop/files/123__SS_6_ae7da2f4-78bc-4935-a01b-eb425dc212d7.jpg?v=1772186379&width=1445'
+    }
+  },
+  'dead-rising': {
+    characters: {
+      'Frank West': {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg', position:'35% center'},
+      'Isabela Keyes': {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg', position:'65% center'},
+      'Brad Garrison': {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg', position:'20% center'},
+      'Carlito Keyes': {url:'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg', position:'80% center'}
+    },
+    arsenal: {
+      'Baseball Bat':'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg',
+      'Chainsaw':'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg',
+      'Servbot Mask':'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg',
+      'Shopping Cart':'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg'
+    },
+    locations: {
+      'Willamette Parkview Mall':'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg',
+      'Leisure Park':'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg',
+      'Security Room':'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg',
+      'Willamette':'https://cdn.cloudflare.steamstatic.com/steam/apps/2527390/header.jpg'
+    }
+  },
+  'dragons-dogma': {
+    characters: {
+      'The Arisen': {url:'https://store.captown.capcom.com/cdn/shop/files/Dragon_s-Dogma-2_f26f3869-4447-4aae-8647-6c300c161fcd.jpg?v=1770272682&width=1445', position:'52% center'},
+      'Main Pawn': {url:'https://store.captown.capcom.com/cdn/shop/files/Dragon_s_Dogma_2_SS_5_ad587aba-2cb8-4fab-8914-ac631a976da3.jpg?v=1771137753&width=1445', position:'center'},
+      'Ulrika': {url:'https://store.captown.capcom.com/cdn/shop/files/Dragon_s-Dogma-2_f26f3869-4447-4aae-8647-6c300c161fcd.jpg?v=1770272682&width=1445', position:'88% center'},
+      'Wilhelmina': {url:'https://store.captown.capcom.com/cdn/shop/files/Dragon_s_Dogma_2_SS_4_837a731e-ca9c-4955-b6d1-ab8c9c519989.jpg?v=1771137753&width=1445', position:'center'}
+    },
+    arsenal: {
+      'Sword & Shield':'https://store.captown.capcom.com/cdn/shop/files/Dragon_s_Dogma_2_SS_5_ad587aba-2cb8-4fab-8914-ac631a976da3.jpg?v=1771137753&width=1445',
+      'Bow':'https://store.captown.capcom.com/cdn/shop/files/Dragon_s-Dogma-2_f26f3869-4447-4aae-8647-6c300c161fcd.jpg?v=1770272682&width=1445',
+      'Archistaff':'https://store.captown.capcom.com/cdn/shop/files/Dragon_s_Dogma_2_SS_4_837a731e-ca9c-4955-b6d1-ab8c9c519989.jpg?v=1771137753&width=1445',
+      'Duospear':'https://store.captown.capcom.com/cdn/shop/files/Dragon_s_Dogma_2_SS_3_2c5aefc9-6ac4-4d94-81f8-5a7ccc47c2d1.jpg?v=1771137753&width=1445'
+    },
+    locations: {
+      'Vermund':'https://store.captown.capcom.com/cdn/shop/files/Dragon_s_Dogma_2_SS_1_2a1f16fd-a732-4f32-b3c1-c3246c262eab.jpg?v=1771137753&width=1445',
+      'Battahl':'https://store.captown.capcom.com/cdn/shop/files/Dragon_s_Dogma_2_SS_5_ad587aba-2cb8-4fab-8914-ac631a976da3.jpg?v=1771137753&width=1445',
+      'Vernworth':'https://store.captown.capcom.com/cdn/shop/files/Dragon_s_Dogma_2_SS_1_2a1f16fd-a732-4f32-b3c1-c3246c262eab.jpg?v=1771137753&width=1445',
+      'Sacred Arbor':'https://store.captown.capcom.com/cdn/shop/files/Dragon_s_Dogma_2_SS_3_2c5aefc9-6ac4-4d94-81f8-5a7ccc47c2d1.jpg?v=1771137753&width=1445'
+    }
+  },
+  'okami': {
+    characters: {
+      'Amaterasu': {url:'https://store.captown.capcom.com/cdn/shop/files/Okami_HD_Remaster_SS_4_JP_c7694aa5-431c-459d-9735-ae0557ce0a1f.jpg?v=1771045976&width=1445', position:'center'},
+      'Issun': {url:'https://store.captown.capcom.com/cdn/shop/files/Okami_HD_Remaster_Key_art_JP_326baeb9-141d-4da0-98a2-9c401f461fc4.jpg?v=1770272606&width=1445', position:'25% 25%'},
+      'Susano': {url:'https://store.captown.capcom.com/cdn/shop/files/Okami_HD_Remaster_Key_art_JP_326baeb9-141d-4da0-98a2-9c401f461fc4.jpg?v=1770272606&width=1445', position:'42% 28%'},
+      'Waka': {url:'https://store.captown.capcom.com/cdn/shop/files/Okami_HD_Remaster_Key_art_JP_326baeb9-141d-4da0-98a2-9c401f461fc4.jpg?v=1770272606&width=1445', position:'18% 22%'}
+    },
+    arsenal: {
+      'Divine Retribution':'https://store.captown.capcom.com/cdn/shop/files/Okami_HD_Remaster_SS_4_JP_c7694aa5-431c-459d-9735-ae0557ce0a1f.jpg?v=1771045976&width=1445',
+      'Celestial Brush':'https://store.captown.capcom.com/cdn/shop/files/Okami_HD_Remaster_SS_1_JP_603f51c9-4283-47c9-a69a-c1fcf9cce608.jpg?v=1771045976&width=1445',
+      'Rosary':'https://store.captown.capcom.com/cdn/shop/files/Okami_HD_Remaster_SS_5_JP_1afd7a28-a4f5-44b8-b425-4a99f251a34a.jpg?v=1771045976&width=1445',
+      'Glaive':'https://store.captown.capcom.com/cdn/shop/files/Okami_HD_Remaster_SS_4_1e3ebe4c-be06-4420-b949-853a482326e3.jpg?v=1771045976&width=1445'
+    },
+    locations: {
+      'Kamiki Village':'https://store.captown.capcom.com/cdn/shop/files/Okami_HD_Remaster_SS_1_JP_603f51c9-4283-47c9-a69a-c1fcf9cce608.jpg?v=1771045976&width=1445',
+      'Shinshu Field':'https://store.captown.capcom.com/cdn/shop/files/Okami_HD_Remaster_SS_5_JP_1afd7a28-a4f5-44b8-b425-4a99f251a34a.jpg?v=1771045976&width=1445',
+      'Sei-an City':'https://store.captown.capcom.com/cdn/shop/files/Okami_HD_Remaster_SS_2_2e806ca0-562f-4712-b520-96b552ef86db.jpg?v=1771045976&width=1445',
+      'Nippon':'https://store.captown.capcom.com/cdn/shop/files/Okami_HD_Remaster_SS_1_JP_603f51c9-4283-47c9-a69a-c1fcf9cce608.jpg?v=1771045976&width=1445'
+    }
+  }
+};
+
+function officialAsset(gameId, group, name, fallback){
+  var game = officialMedia[gameId] || {};
+  var bucket = game[group] || {};
+  var item = bucket[name];
+  if(!item) return {url:fallback,position:'center'};
+  if(typeof item === 'string') return {url:item,position:'center'};
+  return {url:item.url || fallback,position:item.position || 'center'};
 }
 
-function mediaArt(subject, gameTitle, kind){
-  var isPortrait = kind === 'character';
-  var isLocation = kind === 'location';
-  var prompt = [
-    subject,
-    'from', gameTitle,
-    isPortrait ? 'character portrait, full recognizable game character, detailed costume' :
-    isLocation ? 'environment location, cinematic wide establishing shot, detailed architecture and atmosphere' :
-    'signature weapon or equipment, product-style game prop showcase, highly detailed',
-    'premium video game encyclopedia artwork',
-    'cinematic lighting',
-    'clean composition',
-    'no text, no logo, no watermark'
-  ].join(' ');
-  var w = isPortrait ? 720 : (isLocation ? 1200 : 900);
-  var h = isPortrait ? 960 : (isLocation ? 700 : 650);
-  return 'https://image.pollinations.ai/prompt/'+encodeURIComponent(prompt)+'?width='+w+'&height='+h+'&nologo=true&seed='+mediaSeed(subject+gameTitle+kind);
-}
-
-function mediaImg(url,fallback,alt){
-  return '<img loading="lazy" decoding="async" src="'+url+'" alt="'+esc(alt)+'" onerror="this.onerror=null;this.src=\''+fallback+'\'">';
+function mediaImg(url,fallback,alt,position){
+  return '<img loading="lazy" decoding="async" src="'+url+'" alt="'+esc(alt)+'" style="object-position:'+(position || 'center')+'" onerror="this.onerror=null;this.src=\''+fallback+'\'">';
 }
 
 function gameSearchText(game){
@@ -388,9 +556,10 @@ function renderCharacters(){
     });
   });
   $('#characterRail').innerHTML = roster.map(function(item){
-    var art = item.char.image || mediaArt(item.char.name,item.game.title,'character');
+    var media = officialAsset(item.game.id,'characters',item.char.name,item.game.image);
+    var art = item.char.image || media.url;
     return '<article class="character-card" data-id="'+item.game.id+'" style="--game-accent:#ffcc00">'+
-      '<img class="character-card__art" loading="lazy" decoding="async" src="'+art+'" alt="'+esc(item.char.name)+'" onerror="this.onerror=null;this.src=\''+item.game.image+'\'">'+
+      '<img class="character-card__art" loading="lazy" decoding="async" src="'+art+'" alt="'+esc(item.char.name)+'" style="object-position:'+media.position+'" onerror="this.onerror=null;this.src=\''+item.game.image+'\'">'+
       '<div class="character-card__copy"><small>'+item.game.code+' // '+item.char.role+'</small><h3>'+item.char.name+'</h3><p>'+item.game.title+'</p></div>'+
       '</article>';
   }).join('');
@@ -431,10 +600,11 @@ function renderModalContent(){
 
   if(currentTab === 'characters'){
     html = '<div class="media-grid">'+g.characters.map(function(c){
-      var image = c.image || mediaArt(c.name,g.title,'character');
+      var media = officialAsset(g.id,'characters',c.name,g.image);
+      var image = c.image || media.url;
       return '<article class="media-card">'+
         '<div class="media-card__image"><span class="image-badge">CHARACTER</span>'+
-        mediaImg(image,g.image,c.name)+
+        mediaImg(image,g.image,c.name,media.position)+
         '</div><div class="media-card__body"><h4>'+c.name+'</h4><small>'+c.role+'</small><p>'+c.bio+'</p></div>'+
         '</article>';
     }).join('')+'</div>';
@@ -442,10 +612,11 @@ function renderModalContent(){
 
   if(currentTab === 'arsenal'){
     html = '<div class="media-grid">'+g.arsenal.map(function(a){
-      var image = a.image || mediaArt(a.name,g.title,'weapon');
+      var media = officialAsset(g.id,'arsenal',a.name,g.image);
+      var image = a.image || media.url;
       return '<article class="media-card">'+
         '<div class="media-card__image"><span class="image-badge">ARSENAL</span>'+
-        mediaImg(image,g.image,a.name)+
+        mediaImg(image,g.image,a.name,media.position)+
         '</div><div class="media-card__body"><h4>'+a.name+'</h4><small>'+a.type+'</small><p>'+a.note+'</p></div>'+
         '</article>';
     }).join('')+'</div>';
@@ -453,9 +624,10 @@ function renderModalContent(){
 
   if(currentTab === 'locations'){
     html = '<div class="location-list">'+g.locations.map(function(l){
-      var image = l.image || mediaArt(l.name,g.title,'location');
+      var media = officialAsset(g.id,'locations',l.name,g.image);
+      var image = l.image || media.url;
       return '<article class="location-media">'+
-        '<div class="location-media__image">'+mediaImg(image,g.image,l.name)+'</div>'+
+        '<div class="location-media__image">'+mediaImg(image,g.image,l.name,media.position)+'</div>'+
         '<div class="location-media__body"><b>'+l.name+'</b><p>'+l.note+'</p></div>'+
         '</article>';
     }).join('')+'</div>';
