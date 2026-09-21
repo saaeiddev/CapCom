@@ -1,0 +1,29 @@
+name: Probe Sketchfab download
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe API
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L -A "Mozilla/5.0" "https://api.sketchfab.com/v3/models/2389b2db6e874c4287f43c34caedd394" -o /tmp/model.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/model.json'))
+          print('keys', d.keys())
+          for k,v in d.items():
+            if any(s in k.lower() for s in ['download','archive','glb','gltf','source','file']):
+              print(k, v)
+          print('isDownloadable', d.get('isDownloadable'))
+          print('license', d.get('license'))
+          PY
+          for u in             "https://api.sketchfab.com/v3/models/2389b2db6e874c4287f43c34caedd394/download"             "https://api.sketchfab.com/v3/models/2389b2db6e874c4287f43c34caedd394/downloads"; do
+            echo "URL $u"
+            curl -sS -L -A "Mozilla/5.0" -w "\nHTTP=%{http_code}\n" "$u" | head -c 4000
+            echo
+          done
