@@ -371,14 +371,14 @@ footer{padding:28px clamp(24px,7vw,110px) 36px;display:flex;justify-content:spac
 .character-card__art{width:100%;height:100%;object-fit:cover;display:block}
 
 
-/* Homepage interactive chainsaw object — additive only */
+/* Homepage interactive chainsaw object */
 .hero__chainsaw{
   position:absolute;
-  right:clamp(2vw,5vw,78px);
+  right:clamp(0px,2vw,32px);
   top:50%;
   transform:translateY(-50%);
-  width:min(45vw,680px);
-  aspect-ratio:1.18;
+  width:min(52vw,760px);
+  aspect-ratio:1.2;
   z-index:6;
   pointer-events:none;
 }
@@ -427,14 +427,14 @@ footer{padding:28px clamp(24px,7vw,110px) 36px;display:flex;justify-content:spac
 }
 .chainsaw-credit:hover{color:#ffcc00}
 @media(max-width:1050px){
-  .hero__chainsaw{right:-4vw;width:50vw}
+  .hero__chainsaw{right:-2vw;width:55vw}
 }
 @media(max-width:760px){
   .hero__chainsaw{
-    width:96vw;
-    right:-29vw;
-    top:32%;
-    opacity:.72;
+    width:102vw;
+    right:-32vw;
+    top:31%;
+    opacity:.76;
     aspect-ratio:1.05;
   }
   .chainsaw-stage__label,.chainsaw-credit{display:none}
