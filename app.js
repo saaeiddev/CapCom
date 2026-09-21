@@ -664,8 +664,10 @@ function closeModal(){
 }
 
 function updateCore(game){
-  $('#coreTitle').textContent = game.title.toUpperCase();
-  $('#coreMeta').textContent = game.genre.toUpperCase()+' // '+game.year;
+  var coreTitle = $('#coreTitle');
+  var coreMeta = $('#coreMeta');
+  if(coreTitle){coreTitle.textContent = game.title.toUpperCase();}
+  if(coreMeta){coreMeta.textContent = game.genre.toUpperCase()+' // '+game.year;}
   document.documentElement.style.setProperty('--accent','#ffcc00');
   document.documentElement.style.setProperty('--accent-2','#0055a5');
 }

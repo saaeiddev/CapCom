@@ -58,7 +58,22 @@
         </div>
       </div>
 
-      <div id="chainsawMount" class="hero__chainsaw-local" aria-label="Interactive chainsaw 3D model"></div>
+      <div id="chainsawMount" class="hero__chainsaw-local" aria-label="Interactive yellow chainsaw 3D model">
+        <model-viewer
+          id="heroChainsaw"
+          src="./assets/chainsaw.glb?v=yellow-20260921"
+          alt="Interactive yellow chainsaw 3D model"
+          camera-controls
+          auto-rotate
+          rotation-per-second="7deg"
+          interaction-prompt="none"
+          shadow-intensity="0.25"
+          exposure="1.05"
+          environment-image="neutral"
+          camera-orbit="-35deg 72deg auto"
+          field-of-view="28deg">
+        </model-viewer>
+      </div>
 
       <div class="scroll-hint" aria-hidden="true"><span></span> SCROLL TO ACCESS DATABASE</div>
     </section>
