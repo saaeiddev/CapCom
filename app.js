@@ -759,17 +759,26 @@ function setupChainsawModel(){
           api.setTextureQuality('hd',function(){});
           api.getMaterialList(function(materialErr,materials){
             if(materialErr || !materials || !materials.length){reveal();return;}
+
             var source=materials[0];
             var channels=JSON.parse(JSON.stringify(source.channels || {}));
-            var yellow=[.98,.82,.14];
+            var yellow=[1.0,.78,.02];
 
+            /* Keep normal/roughness/metalness/AO maps, replace only the red base-color map. */
             if(channels.AlbedoPBR){
               channels.AlbedoPBR.enable=true;
               channels.AlbedoPBR.color=yellow.slice();
+              if(channels.AlbedoPBR.texture){delete channels.AlbedoPBR.texture;}
             }
             if(channels.DiffuseColor){
               channels.DiffuseColor.enable=true;
               channels.DiffuseColor.color=yellow.slice();
+              if(channels.DiffuseColor.texture){delete channels.DiffuseColor.texture;}
+            }
+            if(channels.DiffusePBR){
+              channels.DiffusePBR.enable=true;
+              channels.DiffusePBR.color=yellow.slice();
+              if(channels.DiffusePBR.texture){delete channels.DiffusePBR.texture;}
             }
 
             api.createMaterial({
@@ -777,13 +786,23 @@ function setupChainsawModel(){
               channels:channels
             },function(createErr,yellowMaterial){
               if(createErr || !yellowMaterial){reveal();return;}
+
               api.getNodeMap(function(nodeErr,nodes){
                 if(nodeErr || !nodes){reveal();return;}
+
                 var list=Array.isArray(nodes)?nodes:Object.keys(nodes).map(function(key){return nodes[key];});
-                var bodyNames={'Object_18':1,'Object_19':1,'Object_20':1,'Object_21':1};
-                var targets=list.filter(function(node){return node && bodyNames[node.name];});
+                var bodyNames={
+                  'Object_18':1,
+                  'Object_19':1,
+                  'Object_20':1,
+                  'Object_21':1
+                };
+                var targets=list.filter(function(node){
+                  return node && bodyNames[node.name];
+                });
 
                 if(!targets.length){reveal();return;}
+
                 var remaining=targets.length;
                 targets.forEach(function(node){
                   api.assignMaterial(node,yellowMaterial.id,function(){
@@ -791,7 +810,7 @@ function setupChainsawModel(){
                     if(remaining<=0){reveal();}
                   });
                 });
-                setTimeout(reveal,1800);
+                setTimeout(reveal,1600);
               });
             });
           });
@@ -817,33 +836,6 @@ function setupThree(){
   var camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,.1,100);
   camera.position.set(0,0,13);
 
-  var group = new THREE.Group();
-  group.position.x = window.innerWidth > 760 ? 3.6 : 1.6;
-  group.position.y = .4;
-  scene.add(group);
-
-  var coreGeo = new THREE.IcosahedronGeometry(1.55,2);
-  var coreMat = new THREE.MeshBasicMaterial({color:0xffcc00,wireframe:true,transparent:true,opacity:.20});
-  var core = new THREE.Mesh(coreGeo,coreMat);
-  group.add(core);
-
-  var inner = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(.9,1),
-    new THREE.MeshBasicMaterial({color:0x0066cc,wireframe:true,transparent:true,opacity:.20})
-  );
-  group.add(inner);
-
-  var rings = [];
-  [2.2,2.8,3.4].forEach(function(radius,index){
-    var ring = new THREE.Mesh(
-      new THREE.TorusGeometry(radius,.012,8,120),
-      new THREE.MeshBasicMaterial({color:index===1?0xffcc00:0x2a8cff,transparent:true,opacity:.22})
-    );
-    ring.rotation.x = Math.PI/2.5 + index*.34;
-    ring.rotation.y = index*.55;
-    group.add(ring);rings.push(ring);
-  });
-
   var starCount = window.innerWidth < 700 ? 450 : 950;
   var positions = new Float32Array(starCount*3);
   for(var i=0;i<starCount;i++){
@@ -856,36 +848,10 @@ function setupThree(){
   var stars = new THREE.Points(starGeo,new THREE.PointsMaterial({color:0xbfdcff,size:.025,transparent:true,opacity:.42}));
   scene.add(stars);
 
-  var nodeGroup = new THREE.Group();
-  group.add(nodeGroup);
-  games.slice(0,7).forEach(function(game,index){
-    var angle = (index/games.slice(0,7).length)*Math.PI*2;
-    var sphere = new THREE.Mesh(
-      new THREE.SphereGeometry(.075,12,12),
-      new THREE.MeshBasicMaterial({color:new THREE.Color(index%2===0?'#ffcc00':'#2a8cff'),transparent:true,opacity:.9})
-    );
-    sphere.position.set(Math.cos(angle)*3.05,Math.sin(angle*1.8)*1.35,Math.sin(angle)*1.6);
-    nodeGroup.add(sphere);
-  });
-
-  var mouseX=0,mouseY=0,scrollY=0;
-  window.addEventListener('pointermove',function(e){
-    mouseX=(e.clientX/window.innerWidth-.5)*2;
-    mouseY=(e.clientY/window.innerHeight-.5)*2;
-  },{passive:true});
-  window.addEventListener('scroll',function(){scrollY=window.scrollY;},{passive:true});
-
   var clock = new THREE.Clock();
   function animate(){
     var t=clock.getElapsedTime();
-    core.rotation.x=t*.08;core.rotation.y=t*.13;
-    inner.rotation.x=-t*.11;inner.rotation.z=t*.16;
-    rings[0].rotation.z=t*.035;rings[1].rotation.y=t*.04;rings[2].rotation.z=-t*.03;
-    nodeGroup.rotation.z=t*.05;
     stars.rotation.y=t*.004;
-    group.rotation.y += (mouseX*.12-group.rotation.y)*.025;
-    group.rotation.x += (-mouseY*.08-group.rotation.x)*.025;
-    group.position.y = .4-Math.min(scrollY*.00055,2.4);
     renderer.render(scene,camera);
     requestAnimationFrame(animate);
   }
@@ -895,7 +861,6 @@ function setupThree(){
     camera.aspect=window.innerWidth/window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth,window.innerHeight);
-    group.position.x=window.innerWidth>760?3.6:1.6;
   });
 }
 
