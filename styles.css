@@ -369,3 +369,74 @@ footer{padding:28px clamp(24px,7vw,110px) 36px;display:flex;justify-content:spac
 }
 
 .character-card__art{width:100%;height:100%;object-fit:cover;display:block}
+
+
+/* Homepage interactive chainsaw object — additive only */
+.hero__chainsaw{
+  position:absolute;
+  right:clamp(2vw,5vw,78px);
+  top:50%;
+  transform:translateY(-50%);
+  width:min(45vw,680px);
+  aspect-ratio:1.18;
+  z-index:6;
+  pointer-events:none;
+}
+.hero__chainsaw iframe{
+  width:100%;
+  height:100%;
+  display:block;
+  border:0;
+  background:transparent;
+  opacity:0;
+  transition:opacity .7s ease;
+  pointer-events:auto;
+  filter:drop-shadow(0 34px 55px rgba(0,0,0,.38));
+}
+.hero__chainsaw.is-ready iframe{opacity:1}
+.chainsaw-stage__label{
+  position:absolute;
+  left:7%;
+  top:7%;
+  z-index:2;
+  display:grid;
+  gap:5px;
+  pointer-events:none;
+  text-shadow:0 2px 14px rgba(0,0,0,.5);
+}
+.chainsaw-stage__label span{
+  color:#ffcc00;
+  font:700 7px Orbitron;
+  letter-spacing:.18em;
+}
+.chainsaw-stage__label b{
+  color:#fff;
+  font:700 10px Orbitron;
+  letter-spacing:.08em;
+}
+.chainsaw-credit{
+  position:absolute;
+  right:6%;
+  bottom:3%;
+  z-index:3;
+  pointer-events:auto;
+  color:rgba(224,236,255,.72);
+  font:600 6px Orbitron;
+  letter-spacing:.06em;
+  transition:color .2s ease;
+}
+.chainsaw-credit:hover{color:#ffcc00}
+@media(max-width:1050px){
+  .hero__chainsaw{right:-4vw;width:50vw}
+}
+@media(max-width:760px){
+  .hero__chainsaw{
+    width:96vw;
+    right:-29vw;
+    top:32%;
+    opacity:.72;
+    aspect-ratio:1.05;
+  }
+  .chainsaw-stage__label,.chainsaw-credit{display:none}
+  .hero__chainsaw iframe{pointer-events:none}
+}
